@@ -36,110 +36,115 @@ const ViewNote = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Ver Nota</h2>
-      <form onSubmit={handleUpdate}>
-        <div className="form-group">
-          <label>Título</label>
-          <input
-            type="text"
-            className="form-control"
-            name="title"
-            value={editableNote.title}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group mt-3">
-          <label>Contenido</label>
-          <textarea
-            className="form-control"
-            name="content"
-            value={editableNote.content}
-            onChange={handleChange}
-          ></textarea>
-        </div>
-
-        <div className="form-group mt-3">
-          <label>Prioridad</label>
-          <select
-            className="form-control"
-            name="priority"
-            value={editableNote.priority}
-            onChange={handleChange}
-          >
-            <option>Alta</option>
-            <option>Media</option>
-            <option>Baja</option>
-          </select>
-        </div>
-
-        <div className="form-group mt-3">
-          <label>Tipo de Nota</label>
-          <select
-            className="form-control"
-            name="noteType"
-            value={editableNote.noteType}
-            onChange={handleChange}
-          >
-            <option>Evento</option>
-            <option>Actividad</option>
-            <option>Pendiente</option>
-          </select>
-        </div>
-
-        <div className="form-group mt-3">
-          <label>Fecha de Inicio</label>
-          <input
-            type="date"
-            className="form-control"
-            name="startDate"
-            value={editableNote.startDate}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group mt-3">
-          <label>Fecha de Finalización</label>
-          <input
-            type="date"
-            className="form-control"
-            name="finishDate"
-            value={editableNote.finishDate}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group mt-3">
-          <label>Persona Responsable</label>
-          <input
-            type="text"
-            className="form-control"
-            name="responsible"
-            value={editableNote.responsible}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group mt-3">
-          <label>
+    <div className="container mt-5 d-flex justify-content-center">
+      <div className="col-md-8">
+        <h2>Ver Nota</h2>
+        <form onSubmit={handleUpdate}>
+          <div className="form-group">
+            <label>Título</label>
             <input
-              type="checkbox"
-              name="status"
-              checked={editableNote.status === 'Completado'}
+              type="text"
+              className="form-control"
+              name="title"
+              value={editableNote.title}
               onChange={handleChange}
             />
-            {' '}¿Completado?
-          </label>
-        </div>
+          </div>
 
-        <button type="submit" className="btn btn-primary mt-3">
-          Actualizar Nota
-        </button>
-        <button type="button" className="btn btn-danger mt-3 ms-3" onClick={handleDelete}>
-          Eliminar Nota
-        </button>
-      </form>
+          <div className="form-group mt-3">
+            <label>Contenido</label>
+            <textarea
+              className="form-control"
+              name="content"
+              value={editableNote.content}
+              onChange={handleChange}
+            ></textarea>
+          </div>
+
+          <div className="form-group mt-3">
+            <label>Prioridad</label>
+            <select
+              className="form-control"
+              name="priority"
+              value={editableNote.priority}
+              onChange={handleChange}
+            >
+              <option>Alta</option>
+              <option>Media</option>
+              <option>Baja</option>
+            </select>
+          </div>
+
+          <div className="form-group mt-3">
+            <label>Tipo de Nota</label>
+            <select
+              className="form-control"
+              name="noteType"
+              value={editableNote.noteType}
+              onChange={handleChange}
+            >
+              <option>Evento</option>
+              <option>Actividad</option>
+              <option>Pendiente</option>
+            </select>
+          </div>
+
+          <div className="form-group mt-3">
+            <label>Fecha de Inicio</label>
+            <input
+              type="date"
+              className="form-control"
+              name="startDate"
+              value={editableNote.startDate}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group mt-3">
+            <label>Fecha de Finalización</label>
+            <input
+              type="date"
+              className="form-control"
+              name="finishDate"
+              value={editableNote.finishDate}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group mt-3">
+            <label>Persona Responsable</label>
+            <input
+              type="text"
+              className="form-control"
+              name="responsible"
+              value={editableNote.responsible}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="form-group mt-3">
+            <label>
+              <input
+                type="checkbox"
+                name="status"
+                checked={editableNote.status === 'Completado'}
+                onChange={handleChange}
+              />
+              {' '}¿Completado?
+            </label>
+          </div>
+
+          {/* Botones centrados */}
+          <div className="d-flex justify-content-center mt-3">
+            <button type="submit" className="btn btn-primary me-3">
+              Actualizar Nota
+            </button>
+            <button type="button" className="btn btn-danger" onClick={handleDelete}>
+              Eliminar Nota
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
