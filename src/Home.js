@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { notesData } from './data';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import NoteDetailModal from './NoteDetailModal';
-import EditIcon from '@mui/icons-material/Edit';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { notesData } from "./data";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import NoteDetailModal from "./NoteDetailModal";
+import EditIcon from "@mui/icons-material/Edit";
 
 const Home = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
-    status: '',
-    responsible: '',
-    priority: '',
-    noteType: '',
-    startDate: '',
-    finishDate: ''
+    status: "",
+    responsible: "",
+    priority: "",
+    noteType: "",
+    startDate: "",
+    finishDate: "",
   });
 
   const [showModal, setShowModal] = useState(false);
@@ -29,20 +29,32 @@ const Home = () => {
     setSelectedNote(null);
   };
 
-  const filteredNotes = notesData.filter(note => {
+  const filteredNotes = notesData.filter((note) => {
     const matchesSearchTerm =
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase());
-  
-    const matchesStatus = filters.status ? note.status === filters.status : true;
-    const matchesResponsible = filters.responsible 
-      ? note.responsible.toLowerCase().includes(filters.responsible.toLowerCase()) 
+
+    const matchesStatus = filters.status
+      ? note.status === filters.status
       : true;
-    const matchesPriority = filters.priority ? note.priority === filters.priority : true;
-    const matchesNoteType = filters.noteType ? note.noteType === filters.noteType : true;
-    const matchesStartDate = filters.startDate ? new Date(note.startDate) >= new Date(filters.startDate) : true;
-    const matchesFinishDate = filters.finishDate ? new Date(note.finishDate) <= new Date(filters.finishDate) : true;
-  
+    const matchesResponsible = filters.responsible
+      ? note.responsible
+          .toLowerCase()
+          .includes(filters.responsible.toLowerCase())
+      : true;
+    const matchesPriority = filters.priority
+      ? note.priority === filters.priority
+      : true;
+    const matchesNoteType = filters.noteType
+      ? note.noteType === filters.noteType
+      : true;
+    const matchesStartDate = filters.startDate
+      ? new Date(note.startDate) >= new Date(filters.startDate)
+      : true;
+    const matchesFinishDate = filters.finishDate
+      ? new Date(note.finishDate) <= new Date(filters.finishDate)
+      : true;
+
     return (
       matchesSearchTerm &&
       matchesStatus &&
@@ -52,18 +64,18 @@ const Home = () => {
       matchesStartDate &&
       matchesFinishDate
     );
-  });  
+  });
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({
       ...filters,
-      [name]: value
+      [name]: value,
     });
   };
 
   return (
-    <div className="container-fluid mt-5">
+    <div className="container mt-5" style={{ maxWidth: "1200px" }}>
       <h1 className="text-center">Pendientes y Actividades</h1>
 
       {/* Barra de Búsqueda */}
@@ -74,7 +86,7 @@ const Home = () => {
             className="form-control"
             placeholder="Buscar notas..."
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
@@ -85,7 +97,11 @@ const Home = () => {
           <h5>Filtrar por:</h5>
           <div className="row g-3">
             <div className="col-12 col-md-2">
-              <select className="form-select" name="status" onChange={handleFilterChange}>
+              <select
+                className="form-select"
+                name="status"
+                onChange={handleFilterChange}
+              >
                 <option value="">Estado</option>
                 <option value="Pendiente">Pendiente</option>
                 <option value="Completado">Completado</option>
@@ -101,7 +117,11 @@ const Home = () => {
               />
             </div>
             <div className="col-12 col-md-2">
-              <select className="form-select" name="priority" onChange={handleFilterChange}>
+              <select
+                className="form-select"
+                name="priority"
+                onChange={handleFilterChange}
+              >
                 <option value="">Prioridad</option>
                 <option value="Alta">Alta</option>
                 <option value="Media">Media</option>
@@ -109,7 +129,11 @@ const Home = () => {
               </select>
             </div>
             <div className="col-12 col-md-2">
-              <select className="form-select" name="noteType" onChange={handleFilterChange}>
+              <select
+                className="form-select"
+                name="noteType"
+                onChange={handleFilterChange}
+              >
                 <option value="">Tipo</option>
                 <option value="Evento">Evento</option>
                 <option value="Actividad">Actividad</option>
@@ -139,7 +163,7 @@ const Home = () => {
       </div>
 
       {/* Tabla de Notas Responsiva */}
-      <div className="row">
+      <div className="row mb-3">
         <div className="col-12">
           <div className="table-responsive">
             <table className="table table-striped">
@@ -157,7 +181,7 @@ const Home = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredNotes.map(note => (
+                {filteredNotes.map((note) => (
                   <tr key={note.id}>
                     <td>
                       <Link to={`/note/${note.id}`} className="btn btn">
@@ -188,8 +212,10 @@ const Home = () => {
 
       {/* Botón para agregar nueva nota */}
       <div className="row">
-        <div className="col-12 col-md-8 offset-md-2 text-center">
-          <Link to="/add" className="btn btn-primary">Agregar Nueva Nota</Link>
+        <div className="col-md-8 offset-md-2 d-flex justify-content-center">
+          <Link to="/add" className="btn btn-primary mb-3">
+            Agregar Nueva Nota
+          </Link>
         </div>
       </div>
 
