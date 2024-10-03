@@ -79,10 +79,10 @@ const Home = () => {
     const matchesPriority = filters.priority ? note.priority === filters.priority : true;
     const matchesNoteType = filters.noteType ? note.noteType === filters.noteType : true;
     const matchesStartDate = filters.startDate
-      ? new Date(note.startDate) >= new Date(filters.startDate)
+      ? new Date(note.startDate) === new Date(filters.startDate)
       : true;
     const matchesFinishDate = filters.finishDate
-      ? new Date(note.finishDate) <= new Date(filters.finishDate)
+      ? new Date(note.finishDate) === new Date(filters.finishDate)
       : true;
 
     return (
