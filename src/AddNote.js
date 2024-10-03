@@ -1,6 +1,9 @@
+// src/AddNote.js
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addNote } from './data';
+import { db } from './firebaseConfig'; // Asegúrate de que la ruta sea correcta
+import { collection, addDoc } from 'firebase/firestore'; // Importa Firestore
 
 const AddNote = () => {
   const [note, setNote] = useState({
@@ -11,32 +14,70 @@ const AddNote = () => {
     startDate: '',
     finishDate: '',
     responsible: '',
-    status: 'Pendiente', // Estado predeterminado
-    noteType: 'Actividad', // Tipo de nota predeterminado
+    status: 'Pendiente',
+    noteType: 'Actividad',
   });
+  
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    
-    // Si es checkbox, se maneja el estado como completado/no completado
+
+    // Maneja el checkbox para el estado
     if (type === 'checkbox') {
-      setNote(prevNote => ({
+      setNote((prevNote) => ({
         ...prevNote,
         status: checked ? 'Completado' : 'Pendiente'
       }));
     } else {
-      setNote(prevNote => ({
+      setNote((prevNote) => ({
         ...prevNote,
         [name]: value
       }));
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    addNote(note); // Añadir la nota
-    navigate('/'); // Volver a la pantalla principal
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Evita el envío del formulario por defecto
+    try {
+      // Verifica que todos los campos requeridos estén completos
+      if (!note.title || !note.content || !note.startDate || !note.responsible) {
+        alert("Por favor, completa todos los campos obligatorios.");
+        return;
+      }
+
+      // Log de los datos a enviar
+      console.log("Datos a enviar a Firestore:", note);
+
+      // Agrega la nota a Firestore
+      const docRef = await addDoc(collection(db, 'notes'), note);
+      console.log("Nota guardada con ID:", docRef.id);
+
+      // Opcional: Limpiar el estado después de guardar
+      setNote({
+        title: '',
+        content: '',
+        priority: 'Media',
+        creationDate: new Date().toLocaleDateString(),
+        startDate: '',
+        finishDate: '',
+        responsible: '',
+        status: 'Pendiente',
+        noteType: 'Actividad',
+      });
+
+      // Navegar a la pantalla principal
+      navigate('/');
+    } catch (error) {
+      console.error("Error al agregar la nota: ", error);
+
+      // Manejo de errores
+      if (error.code === 'permission-denied') {
+        alert("No tienes permiso para agregar notas. Verifica las reglas de seguridad en Firestore.");
+      } else {
+        alert("Hubo un error al guardar la nota. Por favor, intenta de nuevo.");
+      }
+    }
   };
 
   return (

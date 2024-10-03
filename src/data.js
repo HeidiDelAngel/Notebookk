@@ -1,47 +1,66 @@
-export let notesData = [
-    {
-      id: 1,
-      title: 'Primera Nota',
-      content: 'Contenido de la primera nota',
-      priority: 'Alta',
-      creationDate: '01/01/2024',
-      startDate: '01/01/2024',
-      finishDate: '10/01/2024',
-      responsible: 'Juan Pérez',
-      status: 'Pendiente',
-      noteType: 'Evento'
-    },
-    {
-      id: 2,
-      title: 'Segunda Nota',
-      content: 'Contenido de la segunda nota',
-      priority: 'Media',
-      creationDate: '02/01/2024',
-      startDate: '02/01/2024',
-      finishDate: '15/01/2024',
-      responsible: 'Ana Gómez',
-      status: 'Completado',
-      noteType: 'Actividad'
+import { collection, addDoc, getDoc, doc, updateDoc, deleteDoc, getDocs } from "firebase/firestore";
+import { db } from "./firebaseConfig"; // Asegúrate de tener configurada la conexión a Firebase aquí
+
+// Función para agregar una nueva nota
+export const addNote = async (note) => {
+  try {
+    const docRef = await addDoc(collection(db, "notes"), note);
+    console.log("Nota agregada con ID: ", docRef.id);
+    return docRef.id; // Retorna el ID de la nueva nota
+  } catch (e) {
+    console.error("Error al agregar la nota: ", e);
+  }
+};
+
+// Función para obtener una nota por su ID
+export const getNoteById = async (id) => {
+  try {
+    const docRef = doc(db, "notes", id);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      console.log("No existe el documento");
+      return null;
     }
-  ];
-  
-  
-  export const addNote = (note) => {
-    note.id = notesData.length + 1;
-    notesData.push(note);
-  };
-  
-  export const getNoteById = (id) => {
-    return notesData.find(note => note.id === id);
-  };
-  
-  export const updateNote = (updatedNote) => {
-    notesData = notesData.map(note =>
-      note.id === updatedNote.id ? updatedNote : note
-    );
-  };
-  
-  export const deleteNote = (id) => {
-    notesData = notesData.filter(note => note.id !== parseInt(id));
-  };
-  
+  } catch (e) {
+    console.error("Error al obtener la nota: ", e);
+  }
+};
+
+// Función para actualizar una nota
+export const updateNote = async (updatedNote) => {
+  try {
+    const noteRef = doc(db, "notes", updatedNote.id);
+    await updateDoc(noteRef, updatedNote);
+    console.log("Nota actualizada con éxito");
+  } catch (e) {
+    console.error("Error al actualizar la nota: ", e);
+  }
+};
+
+// Función para eliminar una nota por ID
+export const deleteNote = async (id) => {
+  try {
+    await deleteDoc(doc(db, "notes", id));
+    console.log("Nota eliminada con éxito");
+  } catch (e) {
+    console.error("Error al eliminar la nota: ", e);
+  }
+};
+
+// Función para obtener todas las notas
+export const getAllNotes = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "notes"));
+    const notesArray = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    return notesArray;
+  } catch (e) {
+    console.error("Error al obtener las notas: ", e);
+    return [];
+  }
+};

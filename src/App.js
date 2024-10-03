@@ -13,10 +13,13 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/add" element={<AddNote />} />
           <Route path="/note/:id" element={<ViewNote />} />
+          <Route path="/note/:id" element={<ViewNote />} />
+          
         </Routes>
       </div>
     </Router>
   );
-};
+}
+
 
 export default App;

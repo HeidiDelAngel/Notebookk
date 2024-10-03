@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getNoteById, updateNote, deleteNote } from './data';
 
 const ViewNote = () => {
   const { id } = useParams();
-  const note = getNoteById(parseInt(id));
-  const [editableNote, setEditableNote] = useState({ ...note });
+  const [editableNote, setEditableNote] = useState(null); // Initialize as null
   const navigate = useNavigate();
 
+  // Fetch note data when the component mounts
+  useEffect(() => {
+    const fetchNote = async () => {
+      const note = await getNoteById(id);
+      setEditableNote(note); // Set the note data to state
+    };
+
+    fetchNote();
+  }, [id]);
+
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     
@@ -24,16 +34,23 @@ const ViewNote = () => {
     }
   };
 
-  const handleUpdate = (e) => {
+  // Handle updating the note
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    updateNote(editableNote);
-    navigate('/');
+    await updateNote(editableNote);
+    navigate('/'); // Navigate back to the home page after updating
   };
 
-  const handleDelete = () => {
-    deleteNote(id);
-    navigate('/');
+  // Handle deleting the note
+  const handleDelete = async () => {
+    await deleteNote(id);
+    navigate('/'); // Navigate back to the home page after deleting
   };
+
+  // Show loading or error state if editableNote is not loaded
+  if (!editableNote) {
+    return <div>Loading...</div>; // Optional loading state
+  }
 
   return (
     <div className="container mt-5 d-flex justify-content-center">
@@ -69,9 +86,9 @@ const ViewNote = () => {
               value={editableNote.priority}
               onChange={handleChange}
             >
-              <option>Alta</option>
-              <option>Media</option>
-              <option>Baja</option>
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
             </select>
           </div>
 
@@ -83,9 +100,9 @@ const ViewNote = () => {
               value={editableNote.noteType}
               onChange={handleChange}
             >
-              <option>Evento</option>
-              <option>Actividad</option>
-              <option>Pendiente</option>
+              <option value="Evento">Evento</option>
+              <option value="Actividad">Actividad</option>
+              <option value="Pendiente">Pendiente</option>
             </select>
           </div>
 

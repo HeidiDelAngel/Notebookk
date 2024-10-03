@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { notesData } from "./data";
+import { getAllNotes, notesData } from "./data";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import NoteDetailModal from './NoteDetailModal';
 
 const Home = () => {
+  const [notes, setNotes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     status: "",
@@ -28,6 +29,14 @@ const Home = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const fetchedNotes = await getAllNotes();
+      setNotes(fetchedNotes);
+    };
+    fetchNotes();
+  }, []);
 
   const handleShowModal = (note) => {
     setSelectedNote(note);
@@ -58,7 +67,7 @@ const Home = () => {
     }));
   };
 
-  const filteredNotes = notesData.filter((note) => {
+  const filteredNotes = notes.filter((note) => {
     const matchesSearchTerm =
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase());
