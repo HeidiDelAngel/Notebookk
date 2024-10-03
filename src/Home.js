@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { notesData } from "./data";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import NoteDetailModal from "./NoteDetailModal";
 import EditIcon from "@mui/icons-material/Edit";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import NoteDetailModal from './NoteDetailModal';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,6 +15,15 @@ const Home = () => {
     noteType: "",
     startDate: "",
     finishDate: "",
+  });
+
+  const [showFilters, setShowFilters] = useState({
+    responsible: false,
+    startDate: false,
+    finishDate: false,
+    priority: false,
+    noteType: false,
+    status: false,
   });
 
   const [showModal, setShowModal] = useState(false);
@@ -29,25 +39,36 @@ const Home = () => {
     setSelectedNote(null);
   };
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({
+      ...filters,
+      [name]: value,
+    });
+  };
+
+  const clearFilter = (filterName) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterName]: "",
+    }));
+    setShowFilters((prevShowFilters) => ({
+      ...prevShowFilters,
+      [filterName]: false, // Oculta el campo de filtro al limpiar
+    }));
+  };
+
   const filteredNotes = notesData.filter((note) => {
     const matchesSearchTerm =
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = filters.status
-      ? note.status === filters.status
-      : true;
+    const matchesStatus = filters.status ? note.status === filters.status : true;
     const matchesResponsible = filters.responsible
-      ? note.responsible
-          .toLowerCase()
-          .includes(filters.responsible.toLowerCase())
+      ? note.responsible.toLowerCase().includes(filters.responsible.toLowerCase())
       : true;
-    const matchesPriority = filters.priority
-      ? note.priority === filters.priority
-      : true;
-    const matchesNoteType = filters.noteType
-      ? note.noteType === filters.noteType
-      : true;
+    const matchesPriority = filters.priority ? note.priority === filters.priority : true;
+    const matchesNoteType = filters.noteType ? note.noteType === filters.noteType : true;
     const matchesStartDate = filters.startDate
       ? new Date(note.startDate) >= new Date(filters.startDate)
       : true;
@@ -66,16 +87,8 @@ const Home = () => {
     );
   });
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
-
   return (
-    <div className="container mt-5" style={{ maxWidth: "1200px" }}>
+    <div className="container mt-5" style={{ maxWidth: "1400px" }}>
       <h1 className="text-center">Pendientes y Actividades</h1>
 
       {/* Barra de Búsqueda */}
@@ -91,78 +104,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Contenedor para filtros */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <h5>Filtrar por:</h5>
-          <div className="row g-3">
-            <div className="col-12 col-md-2">
-              <select
-                className="form-select"
-                name="status"
-                onChange={handleFilterChange}
-              >
-                <option value="">Estado</option>
-                <option value="Pendiente">Pendiente</option>
-                <option value="Completado">Completado</option>
-              </select>
-            </div>
-            <div className="col-12 col-md-2">
-              <input
-                type="text"
-                className="form-control"
-                name="responsible"
-                placeholder="Responsable"
-                onChange={handleFilterChange}
-              />
-            </div>
-            <div className="col-12 col-md-2">
-              <select
-                className="form-select"
-                name="priority"
-                onChange={handleFilterChange}
-              >
-                <option value="">Prioridad</option>
-                <option value="Alta">Alta</option>
-                <option value="Media">Media</option>
-                <option value="Baja">Baja</option>
-              </select>
-            </div>
-            <div className="col-12 col-md-2">
-              <select
-                className="form-select"
-                name="noteType"
-                onChange={handleFilterChange}
-              >
-                <option value="">Tipo</option>
-                <option value="Evento">Evento</option>
-                <option value="Actividad">Actividad</option>
-                <option value="Pendiente">Pendiente</option>
-              </select>
-            </div>
-            <div className="col-12 col-md-2">
-              <label htmlFor="startDate">Fecha de Inicio</label>
-              <input
-                type="date"
-                className="form-control"
-                name="startDate"
-                onChange={handleFilterChange}
-              />
-            </div>
-            <div className="col-12 col-md-2">
-              <label htmlFor="finishDate">Fecha de Finalización</label>
-              <input
-                type="date"
-                className="form-control"
-                name="finishDate"
-                onChange={handleFilterChange}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabla de Notas Responsiva */}
       <div className="row mb-3">
         <div className="col-12">
           <div className="table-responsive">
@@ -171,13 +112,169 @@ const Home = () => {
                 <tr>
                   <th>Acciones</th>
                   <th>Título</th>
-                  <th>Tipo</th>
-                  <th>Prioridad</th>
+                  <th>
+                    Tipo
+                    <FilterListIcon
+                      style={{ cursor: "pointer", marginLeft: "5px" }}
+                      onClick={() => setShowFilters((prev) => ({ ...prev, noteType: !prev.noteType }))}
+                    />
+                    {showFilters.noteType && (
+                      <div>
+                        <select
+                          className="form-select form-select-sm mt-2"
+                          name="noteType"
+                          onChange={handleFilterChange}
+                        >
+                          <option value="">Seleccionar Tipo</option>
+                          <option value="Evento">Evento</option>
+                          <option value="Actividad">Actividad</option>
+                          <option value="Pendiente">Pendiente</option>
+                        </select>
+                        {filters.noteType && (
+                          <button
+                            className="btn btn-sm btn-danger mt-2"
+                            onClick={() => clearFilter("noteType")}
+                          >
+                            Limpiar
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </th>
+                  <th>
+                    Prioridad
+                    <FilterListIcon
+                      style={{ cursor: "pointer", marginLeft: "5px" }}
+                      onClick={() => setShowFilters((prev) => ({ ...prev, priority: !prev.priority }))}
+                    />
+                    {showFilters.priority && (
+                      <div>
+                        <select
+                          className="form-select form-select-sm mt-2"
+                          name="priority"
+                          onChange={handleFilterChange}
+                        >
+                          <option value="">Seleccionar Prioridad</option>
+                          <option value="Alta">Alta</option>
+                          <option value="Media">Media</option>
+                          <option value="Baja">Baja</option>
+                        </select>
+                        {filters.priority && (
+                          <button
+                            className="btn btn-sm btn-danger mt-2"
+                            onClick={() => clearFilter("priority")}
+                          >
+                            Limpiar
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </th>
                   <th>Fecha de Creación</th>
-                  <th>Fecha de Inicio</th>
-                  <th>Fecha de Finalización</th>
-                  <th>Estado</th>
-                  <th>Responsable</th>
+                  <th>
+                    Fecha de Inicio
+                    <FilterListIcon
+                      style={{ cursor: "pointer", marginLeft: "5px" }}
+                      onClick={() => setShowFilters((prev) => ({ ...prev, startDate: !prev.startDate }))}
+                    />
+                    {showFilters.startDate && (
+                      <div>
+                        <input
+                          type="date"
+                          className="form-control form-control-sm mt-2"
+                          name="startDate"
+                          onChange={handleFilterChange}
+                        />
+                        {filters.startDate && (
+                          <button
+                            className="btn btn-sm btn-danger mt-2"
+                            onClick={() => clearFilter("startDate")}
+                          >
+                            Limpiar
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </th>
+                  <th>
+                    Fecha de Finalización
+                    <FilterListIcon
+                      style={{ cursor: "pointer", marginLeft: "5px" }}
+                      onClick={() => setShowFilters((prev) => ({ ...prev, finishDate: !prev.finishDate }))}
+                    />
+                    {showFilters.finishDate && (
+                      <div>
+                        <input
+                          type="date"
+                          className="form-control form-control-sm mt-2"
+                          name="finishDate"
+                          onChange={handleFilterChange}
+                        />
+                        {filters.finishDate && (
+                          <button
+                            className="btn btn-sm btn-danger mt-2"
+                            onClick={() => clearFilter("finishDate")}
+                          >
+                            Limpiar
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </th>
+                  <th>
+                    Estado
+                    <FilterListIcon
+                      style={{ cursor: "pointer", marginLeft: "5px" }}
+                      onClick={() => setShowFilters((prev) => ({ ...prev, status: !prev.status }))}
+                    />
+                    {showFilters.status && (
+                      <div>
+                        <select
+                          className="form-select form-select-sm mt-2"
+                          name="status"
+                          onChange={handleFilterChange}
+                        >
+                          <option value="">Seleccionar Estado</option>
+                          <option value="Pendiente">Pendiente</option>
+                          <option value="Completado">Completado</option>
+                        </select>
+                        {filters.status && (
+                          <button
+                            className="btn btn-sm btn-danger mt-2"
+                            onClick={() => clearFilter("status")}
+                          >
+                            Limpiar
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </th>
+                  <th>
+                    Responsable
+                    <FilterListIcon
+                      style={{ cursor: "pointer", marginLeft: "5px" }}
+                      onClick={() => setShowFilters((prev) => ({ ...prev, responsible: !prev.responsible }))}
+                    />
+                    {showFilters.responsible && (
+                      <div>
+                        <input
+                          type="text"
+                          className="form-control form-control-sm mt-2"
+                          name="responsible"
+                          placeholder="Responsable"
+                          onChange={handleFilterChange}
+                        />
+                        {filters.responsible && (
+                          <button
+                            className="btn btn-sm btn-danger mt-2"
+                            onClick={() => clearFilter("responsible")}
+                          >
+                            Limpiar
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -187,10 +284,7 @@ const Home = () => {
                       <Link to={`/note/${note.id}`} className="btn btn">
                         <EditIcon />
                       </Link>
-                      <button
-                        className="btn btn"
-                        onClick={() => handleShowModal(note)}
-                      >
+                      <button className="btn btn" onClick={() => handleShowModal(note)}>
                         <VisibilityIcon />
                       </button>
                     </td>
