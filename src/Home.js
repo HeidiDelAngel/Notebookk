@@ -116,6 +116,16 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Botón para agregar nueva nota */}
+      <div className="row">
+        <div className="col-md-8 offset-md-2 d-flex justify-content-center">
+          <Link to="/add" className="btn btn-primary mb-3">
+            Agregar Nueva Nota
+          </Link>
+        </div>
+      </div>
+
+    {/* Tablero de notas */}
       <div className="row mb-3">
         <div className="col-12">
           <div className="table-responsive">
@@ -313,15 +323,6 @@ const Home = () => {
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
-
-      {/* Botón para agregar nueva nota */}
-      <div className="row">
-        <div className="col-md-8 offset-md-2 d-flex justify-content-center">
-          <Link to="/add" className="btn btn-primary mb-3">
-            Agregar Nueva Nota
-          </Link>
         </div>
       </div>
 
