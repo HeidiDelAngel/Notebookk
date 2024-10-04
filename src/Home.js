@@ -71,20 +71,22 @@ const Home = () => {
     const matchesSearchTerm =
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase());
-
+  
     const matchesStatus = filters.status ? note.status === filters.status : true;
     const matchesResponsible = filters.responsible
       ? note.responsible.toLowerCase().includes(filters.responsible.toLowerCase())
       : true;
     const matchesPriority = filters.priority ? note.priority === filters.priority : true;
     const matchesNoteType = filters.noteType ? note.noteType === filters.noteType : true;
+  
+    // Aquí modificamos para que coincida con el día exacto
     const matchesStartDate = filters.startDate
-      ? new Date(note.startDate) === new Date(filters.startDate)
+      ? new Date(note.startDate).toDateString() === new Date(filters.startDate).toDateString()
       : true;
     const matchesFinishDate = filters.finishDate
-      ? new Date(note.finishDate) === new Date(filters.finishDate)
+      ? new Date(note.finishDate).toDateString() === new Date(filters.finishDate).toDateString()
       : true;
-
+  
     return (
       matchesSearchTerm &&
       matchesStatus &&
@@ -95,6 +97,7 @@ const Home = () => {
       matchesFinishDate
     );
   });
+  
 
   return (
     <div className="container mt-5" style={{ maxWidth: "1400px" }}>
