@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAllNotes, notesData } from "./data";
+import { getAllNotes, } from "./data";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -71,20 +71,22 @@ const Home = () => {
     const matchesSearchTerm =
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       note.content.toLowerCase().includes(searchTerm.toLowerCase());
-
+  
     const matchesStatus = filters.status ? note.status === filters.status : true;
     const matchesResponsible = filters.responsible
       ? note.responsible.toLowerCase().includes(filters.responsible.toLowerCase())
       : true;
     const matchesPriority = filters.priority ? note.priority === filters.priority : true;
     const matchesNoteType = filters.noteType ? note.noteType === filters.noteType : true;
+  
+    // Aquí modificamos para que coincida con el día exacto
     const matchesStartDate = filters.startDate
-      ? new Date(note.startDate) >= new Date(filters.startDate)
+      ? new Date(note.startDate).toDateString() === new Date(filters.startDate).toDateString()
       : true;
     const matchesFinishDate = filters.finishDate
-      ? new Date(note.finishDate) <= new Date(filters.finishDate)
+      ? new Date(note.finishDate).toDateString() === new Date(filters.finishDate).toDateString()
       : true;
-
+  
     return (
       matchesSearchTerm &&
       matchesStatus &&
@@ -95,6 +97,7 @@ const Home = () => {
       matchesFinishDate
     );
   });
+  
 
   return (
     <div className="container mt-5" style={{ maxWidth: "1400px" }}>
@@ -113,6 +116,16 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Botón para agregar nueva nota */}
+      <div className="row">
+        <div className="col-md-8 offset-md-2 d-flex justify-content-center">
+          <Link to="/add" className="btn btn-primary mb-3">
+            Agregar Nueva Nota
+          </Link>
+        </div>
+      </div>
+
+    {/* Tablero de notas */}
       <div className="row mb-3">
         <div className="col-12">
           <div className="table-responsive">
@@ -310,15 +323,6 @@ const Home = () => {
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
-
-      {/* Botón para agregar nueva nota */}
-      <div className="row">
-        <div className="col-md-8 offset-md-2 d-flex justify-content-center">
-          <Link to="/add" className="btn btn-primary mb-3">
-            Agregar Nueva Nota
-          </Link>
         </div>
       </div>
 
