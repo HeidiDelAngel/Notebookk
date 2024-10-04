@@ -50,7 +50,7 @@ const AddNote = () => {
       console.log("Datos a enviar a Firestore:", note);
 
       // Agrega la nota a Firestore
-      const docRef = await addDoc(collection(db, 'notes'), note);
+      const docRef = await addDoc(collection(db, 'libreta'), note);
       console.log("Nota guardada con ID:", docRef.id);
 
       // Opcional: Limpiar el estado después de guardar

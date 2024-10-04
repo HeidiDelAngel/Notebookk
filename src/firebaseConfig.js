@@ -6,13 +6,13 @@ import { getAuth } from 'firebase/auth'; // Si usas autenticación
 
 // Tus credenciales de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAzp8nhIT50kY0IsgIYEcEBecQ6QMRJYYI",
-  authDomain: "agenda-invisible.firebaseapp.com",
-  projectId: "agenda-invisible",
-  storageBucket: "agenda-invisible.appspot.com",
-  messagingSenderId: "760772303782",
-  appId: "1:760772303782:web:81baf72eaa456189078d67",
-  measurementId: "G-41THKTSPEC"
+  apiKey: "AIzaSyAwJgspfYOcuTnQcRZxK72q1Yyp20jf4Bo",
+  authDomain: "libreta-466c9.firebaseapp.com",
+  projectId: "libreta-466c9",
+  storageBucket: "libreta-466c9.appspot.com",
+  messagingSenderId: "821473467102",
+  appId: "1:821473467102:web:9136c84db2b058fc51c04f",
+  measurementId: "G-D6B4DRZB8J"
 };
 
 // Inicializa Firebase
